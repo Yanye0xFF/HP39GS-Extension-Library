@@ -30,16 +30,20 @@ void draw_line(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
 
         if(dx > dy) {
             numpixels = dx + 1;
-            d = (2 * dy) - dx;
-            dinc1 = 2 * dy;
-            dinc2 = (dy - dx) * 2;
+            d = (dy << 1) - dx;
+            dinc1 = dy << 1;
+            dinc2 = (dy - dx) << 1;
+            //**
+            // *
             xinc1 = 1; xinc2 = 1;
             yinc1 = 0; yinc2 = 1;
         }else {
             numpixels = dy + 1;
-            d = (2 * dx) - dy;
-            dinc1 = 2 * dx;
-            dinc2 = (dx - dy) * 2;
+            d = (dx << 1) - dy;
+            dinc1 = dx << 1;
+            dinc2 = (dx - dy) << 1;
+            //*
+            //**
             xinc1 = 0; xinc2 = 1;
             yinc1 = 1; yinc2 = 1;
         }
