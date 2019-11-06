@@ -10,7 +10,7 @@
 
 * graphics：图形绘制`点 / 线 / 圆 / 矩形 / 5*7 ASCII文字`
 
-##### graphics库说明
+##### graphics 库说明
 使用graphics库中的`draw_text`方法时需要刷入带5*7 ASCII可显示字符的字库`hp39gs_2.22_ascii.bin`  
 
 `hp39gs_2.22_ascii.bin` 字库带GB2312-80字库及 ASCII可显示区域[0x20 ~ 0x7E]字库  
@@ -26,14 +26,14 @@ draw_pixel_ex(0, 4, 8);
 
 draw_line(10, 10, 130, 63);
 
-draw_rect(40,0,8,3);
+draw_rect(40, 0, 8, 3);
 
 draw_circle(64, 32, 10);
 ```
 测试结果：  
 ![screen_graphics](https://raw.githubusercontent.com/Yanye0xFF/PictureBed/master/images/hp39extlib/screen_graphics.png)  
 
-ASCII文字测试：  
+ASCII 文字测试：  
 ``` c
 draw_text(" !\"#$%&'()*+,-./0123", 0, 0);
 draw_text("456789:;<=>?@ABCDEFG", 0, 8);
