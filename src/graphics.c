@@ -90,3 +90,106 @@ void draw_line(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2) {
     }
 }
 
+void draw_rect(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+    if(width == 0 && height == 0) {
+        draw_pixel(x, y);
+        return;
+    } 
+    height -= 1;
+    draw_pixel_ex(x, y, width);
+    draw_pixel_ex(x, y + height, width);
+    
+    for(uint32_t i = y + 1; i < height; i++) {
+        draw_pixel(x, y + i);
+    }
+
+    x = x + width - 1; 
+    for(uint32_t i = y + 1; i < height; i++) {
+        draw_pixel(x, y + i);
+    }
+}
+
+void draw_circle(uint32_t cx, uint32_t cy, uint32_t r) {
+    uint32_t x = 0, y = r;
+    int32_t d = 3 - (2 * r);
+
+    while (x <= y) {
+        draw_pixel(cx + x, cy + y);
+        draw_pixel(cx + x, cy - y);
+
+        if (x != 0) {
+            draw_pixel(cx - x, cy + y);
+            draw_pixel(cx - x, cy - y);
+        }
+
+        if (x != y) {
+            draw_pixel(cx + y, cy + x);
+            draw_pixel(cx - y, cy + x);
+
+            if (x != 0) {
+                draw_pixel(cx + y, cy - x);
+                draw_pixel(cx - y, cy - x);
+            }
+        }
+
+        if (d < 0) {
+            d += 4 * x + 6;
+        }else {
+            d += 4 * (x - y) + 10;
+            y--;
+        }
+        x++;
+    }
+}
+
+const uint8_t height = 7, width = 5;
+//flash offset 0x4000
+const uint32_t base_address = 0x0FEF00;
+void draw_font(uint32_t addr, uint32_t x, uint32_t y) {
+    uint8_t *ptr;
+    uint32_t line, idx, pos;
+
+    for(uint32_t j = 0; j < height; j++) {
+        ptr = (uint8_t *)(addr + j);
+        line = ((y + j) << 4) + ((y + j) << 2);
+
+        for(uint32_t i = 0; i < width; i++) {
+            idx = ((x + i) >> 3); 
+            pos = ((x + i) % 8);
+
+            if(((*ptr) >> (7 - i)) & 0x1) {
+                *(__display_buf + line + idx) |= (0x1 << pos);
+            }else {
+                *(__display_buf + line + idx) &= ~(0x1 << pos);
+            }
+        }
+    }
+}
+
+void draw_text(char *str, uint32_t x, uint32_t y) {
+    /*
+    ascii font bitmap range: [0faf00 0fb200)
+    BaseAdd = 0x0faf00
+    if (ASCIICode >= 0x20 && ASCIICode <= 0x7E)  
+        Address = (ASCIICode – 0x20 ) * 8 + BaseAdd; 
+    */
+    uint32_t address;
+    uint32_t start_x = x;
+
+    while(*str) {
+
+        if(*str == 0x0A) {
+            str++;
+            x = start_x;
+            y += height + 1;
+            continue;
+        }
+        
+        if((*str >= 0x20) && (*str <= 0x7E)) {
+            address = ((*str - 0x20) << 3) + base_address;
+            draw_font(address, x, y);
+            x += (width + 1);
+        }
+        str++;
+    }
+}
