@@ -1,4 +1,32 @@
 # HP39GS-Extension-Library
+##### update 20191111
+* graphics库新增 reverse_area() 方法，用于屏幕指定区域颜色取反
+
+* 新增widgets目录
+
+##### widgets TabView 测试样例
+```c
+TabView tab = {0, 0, 3, 0, 0};
+int8_t *text[] = {"SRAM","FLASH","OPTION"};
+tabview_make(&tab, text);
+while(1) {
+	keycode = get_key();
+		if(keycode == KEY_EVENT_HOME) {
+			return 0;
+		}else if(keycode == KEY_EVENT_LEFT) {
+			if(tab.select > 0) {
+				tabview_select(&tab, tab.select - 1);
+			}
+		}else if(keycode == KEY_EVENT_RIGHT) {
+			if(tab.select < (tab.total - 1)) {
+				tabview_select(&tab, tab.select + 1);
+			}
+		}
+	}
+```
+测试结果：  
+![tabview](https://raw.githubusercontent.com/Yanye0xFF/PictureBed/master/images/hp39extlib/tabview0.png)  
+![tabview](https://raw.githubusercontent.com/Yanye0xFF/PictureBed/master/images/hp39extlib/tabview1.png)  
 ##### 拓展库目录
 * font：HPGCC自带3*5 ASCII字库包含 `Extended ASCII codes (decimal 128 ~ 255) ISO 8859-1`
 
