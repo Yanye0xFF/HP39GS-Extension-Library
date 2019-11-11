@@ -104,7 +104,7 @@ void draw_rect(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
     }
 
     x = x + width - 1; 
-    for(uint32_t i = y + 1; i < height; i++) {
+    for(uint32_t i = 1; i < height; i++) {
         draw_pixel(x, y + i);
     }
 }
@@ -193,3 +193,20 @@ void draw_text(char *str, uint32_t x, uint32_t y) {
         str++;
     }
 }
+
+
+void reverse_area(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+    uint32_t line, idx, pos;
+    for(uint32_t j = 0; j < height; j++) {
+        line = ((y + j) << 4) + ((y + j) << 2);
+        for(uint32_t i = 0; i < width; i++) {
+            idx = ((x + i) >> 3); pos = ((x + i) % 8);
+            if((*(__display_buf + line + idx) >> pos) & 0x1) {
+                *(__display_buf + line + idx) &= ~(0x1 << pos);
+            }else {
+                *(__display_buf + line + idx) |= (0x1 << pos);
+            }
+        }
+    }
+}
+
